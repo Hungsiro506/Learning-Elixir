@@ -20,7 +20,7 @@ defmodule TaxCalculator do
   @doc """
   Calculates the total tax amount per receipt item.
   """
-  def computeItemTax(%ReceiptItem{} = orderItem) do
+  def computeItemTax(%OrderItem{} = orderItem) do
     tax_rate = getTaxRate(orderItem.imported, orderItem.exempted)
     #TODO: rounding
     orderItem.price * orderItem.quantity * tax_rate / 100

@@ -2,7 +2,7 @@ defmodule ShoppingBasket do
   @moduledoc """
   Documentation for SalesTax.
   """
-  defstruct total: 0, sales_tax: 0, items: []
+  defstruct total: 0, salesTax: 0, items: []
 
   def new, do: %__MODULE__{}
 
@@ -11,13 +11,13 @@ defmodule ShoppingBasket do
   total and sales tax upon add of each item.
   """
 
-  def addItem(%__MODULE__{} = shoppingBasket, %ItemOrder{} = orderItem) do
+  def addItem(%__MODULE__{} = shoppingBasket, %OrderItem{} = orderItem) do
     basketItem = BasketItem.new(orderItem)
 
     %{
       shoppingBasket
       | total: shoppingBasket.total +  Item.price,
-        sales_tax: shoppingBasket.salesTax + basketItem.itemTax,
+        salesTax: shoppingBasket.salesTax + basketItem.itemTax,
         items: shoppingBasket.items ++ [basketItem]
     }
   end
@@ -25,16 +25,16 @@ defmodule ShoppingBasket do
    @doc """
   Transforms shopping basket item to string for display and writing invoice to file.
   """
-  def generate_invoice(%ShoppingBasket{items: items, sales_tax: sales_tax, total: total}) do
+  def generateInvoice(%ShoppingBasket{items: items, salesTax: salesTax, total: total}) do
     invoice =
-      Enum.reduce(items, "", fn %BasketItem{quantity: quantity, product: product, price: price},
+      Enum.reduce(items, "", fn %Item{quantity: quantity, product: product, price: price},
                                 acc ->
-        acc <> join(Integer.to_string(quantity), product, Money.to_string(price))
+        acc <> join(Integer.to_string(quantity), product, Integer.to_string(price))
       end)
 
     invoice <>
       "\nSales Taxes: " <>
-      Money.to_string(sales_tax) <> "\n" <> "Total: " <> Money.to_string(total) <> "\n"
+      Integer.to_string(salesTax) <> "\n" <> "Total: " <> Integer.to_string(total) <> "\n"
   end
 
   defp join(quantity, product, price) do

@@ -1,31 +1,29 @@
-defmodule BasketItem do
+defmodule Item do
   @moduledoc """
   Struct to hold receipt item with updated price and item tax .
   """
-  import TaxCalculator, only: [compute_item_tax: 1]
+  import TaxCalculator, only: [computeItemTax: 1]
 
-  defstruct quantity: 0, product: nil, price: nil, item_tax: nil
+  defstruct quantity: 0, product: nil, price: nil, itemTax: nil
 
   @type t :: %__MODULE__{
           quantity: integer,
           product: String.t(),
           price: integer,
-          item_tax: integer
-
+          itemTax: integer
+    }
   @doc """
   Transforms receipt item to basket item with updated price and item tax for each
   receipt item.
   """
   def new(%OrderItem{} = orderItem) do
-    item_tax = compute_item_tax(orderItem)
+    itemTax = computeItemTax(orderItem)
 
     %__MODULE__{
       quantity: orderItem.quantity,
       product: orderItem.product,
-      price:
-        Money.multiply(orderItem.price, orderItem.quantity)
-        |> Money.add(item_tax),
-      item_tax: item_tax
+      price: orderItem.price * orderItem.quantity + itemTax,
+      itemTax: itemTax
     }
   end
 end
