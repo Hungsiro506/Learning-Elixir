@@ -21,8 +21,7 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
-
-config :sales_tax,
+config :salestax,
 exempted: ["pill", "chocolate", "book"],
 basicTaxRate: 10,
 importedTaxRate: 5

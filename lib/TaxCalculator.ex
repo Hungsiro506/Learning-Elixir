@@ -2,8 +2,8 @@ defmodule TaxCalculator do
   @moduledoc """
   Handles tax relates computations.
   """
-  @basicTaxRate Application.get_env(:sales_tax, :basicTaxRate)
-  @importedTaxRate Application.get_env(:sales_tax, :importedTaxRate)
+  @basicTaxRate Application.get_env(:salestax, :basicTaxRate)
+  @importedTaxRate Application.get_env(:salestax, :importedTaxRate)
 
   @doc """
   Calculates the total tax rate for the receipt item.
@@ -21,9 +21,9 @@ defmodule TaxCalculator do
   Calculates the total tax amount per receipt item.
   """
   def computeItemTax(%OrderItem{} = orderItem) do
-    tax_rate = getTaxRate(orderItem.imported, orderItem.exempted)
+    taxRate = getTaxRate(orderItem.imported, orderItem.exempted)
     #TODO: rounding
-    orderItem.price * orderItem.quantity * tax_rate / 100
+    orderItem.price * orderItem.quantity * taxRate / 100
 
   end
 end

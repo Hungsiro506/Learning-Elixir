@@ -3,7 +3,7 @@ defmodule ReceiptParserTest do
   doctest ReceiptParser
 
   test "passing the file path should a return list of receipt items" do
-    path = Path.join("#{:code.priv_dir(:sales_tax)}", "input1.txt")
+    path = Path.join("#{:code.priv_dir(:salestax)}", "input1.txt")
 
     assert ReceiptParser.init(path) ==
              [
@@ -32,7 +32,7 @@ defmodule ReceiptParserTest do
   end
 
   test "passing the file path that does not exit should throw an error" do
-    path = Path.join("#{:code.priv_dir(:sales_tax)}", "input.txt")
+    path = Path.join("#{:code.priv_dir(:salestax)}", "input.txt")
     assert_raise ArgumentError, fn -> ReceiptParser.init(path) end
   end
 

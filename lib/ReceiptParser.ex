@@ -3,7 +3,7 @@ defmodule ReceiptParser do
   Parses the input file and transforms the items to receipt items.
   """
 
-  @exemptions Application.get_env(:sales_tax, :exempted)
+  @exemptions Application.get_env(:salestax, :exempted)
   @imported_keyword "imported"
 
   @doc """
@@ -12,48 +12,48 @@ defmodule ReceiptParser do
   def init(path) do
     # drop header
     path
-    |> FileReader.read_file()
+    |> FileReader.readFile()
     |> Stream.drop(1)
-    |> getReceiptItems()
+    |> getOrderItems()
   end
 
-  def getReceiptItems(input) do
+  def getOrderItems(input) do
     Enum.map(input, fn item ->
       item
-      |> parseReceiptItem()
-      |> updateReceiptItem()
+      |> parseOrderItem()
+      |> updateOrderItem()
     end)
   end
 
-  def parseReceiptItem(line_item) do
+  def parseOrderItem(line_item) do
     [quantity, product, price] =
       line_item
       |> String.split(",")
       |> Enum.map(&String.trim(&1))
 
-    ReceiptItem.new(validateQuantity(quantity), validateProduct(product), validatePrice(price))
+    OrderItem.new(validateQuantity(quantity), validateProduct(product), validatePrice(price))
   end
 
-  def updateReceiptItem(receipt_item) do
+  def updateOrderItem(orderItem) do
     # HACK
     # Note: In real time scenario these two fields are the details obtained from
     # the product catalogue API or DB, for simplicity lets determine the category
     # and imported fields based on the item name in the receipt line item
-    %ReceiptItem{
-      receipt_item
-      | imported: imported?(receipt_item.product),
-        exempted: exempted?(receipt_item.product)
+    %OrderItem{
+      orderItem
+      | imported: imported?(orderItem.product),
+        exempted: exempted?(orderItem.product)
     }
   end
 
-  defp imported?(item_name) do
-    item_name
+  defp imported?(itemName) do
+    itemName
     |> String.downcase()
     |> String.contains?(@imported_keyword)
   end
 
-  defp exempted?(item_name) do
-    item_name
+  defp exempted?(itemName) do
+    itemName
     |> String.downcase()
     |> String.contains?(@exemptions)
   end

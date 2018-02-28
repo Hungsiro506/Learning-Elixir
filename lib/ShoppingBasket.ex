@@ -12,11 +12,11 @@ defmodule ShoppingBasket do
   """
 
   def addItem(%__MODULE__{} = shoppingBasket, %OrderItem{} = orderItem) do
-    basketItem = BasketItem.new(orderItem)
+    basketItem = Item.new(orderItem)
 
     %{
       shoppingBasket
-      | total: shoppingBasket.total +  Item.price,
+      | total: shoppingBasket.total +  basketItem.price,
         salesTax: shoppingBasket.salesTax + basketItem.itemTax,
         items: shoppingBasket.items ++ [basketItem]
     }
@@ -29,12 +29,12 @@ defmodule ShoppingBasket do
     invoice =
       Enum.reduce(items, "", fn %Item{quantity: quantity, product: product, price: price},
                                 acc ->
-        acc <> join(Integer.to_string(quantity), product, Integer.to_string(price))
+        acc <> join(Integer.to_string(quantity), product, Float.to_string(price))
       end)
 
     invoice <>
       "\nSales Taxes: " <>
-      Integer.to_string(salesTax) <> "\n" <> "Total: " <> Integer.to_string(total) <> "\n"
+      Float.to_string(salesTax) <> "\n" <> "Total: " <> Float.to_string(total) <> "\n"
   end
 
   defp join(quantity, product, price) do

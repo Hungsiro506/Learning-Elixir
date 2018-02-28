@@ -31,7 +31,7 @@ defmodule FileReader do
   @doc """
   Writes to a file with _output appended at the filename and prints on console.
   """
-  def writeToFile!(content, path) do
+  def writeToFile(content, path) do
     path
     |> getOutputPath
     |> File.write!(content)
